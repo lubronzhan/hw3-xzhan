@@ -196,10 +196,7 @@ public class RetrievalEvaluator extends CasConsumer_ImplBase {
  * OUTPUT DATA.
  * 
  * ***/
-//		    System.out.print("cosine="+ String.format("%.4f", docVector.getCos()));
-//        System.out.println( "\tqid=" + 
-//                docVector.getId() + "\trel=" + docVector.getRel() + "\t" + docVector.getSentence());
-		    // store doc into array
+
 		    array[k] = docVector;
 		    k++;
 		  }
