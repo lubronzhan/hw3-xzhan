@@ -1,0 +1,2 @@
+itf=-0.6927	rank=4	qid=1	rel=1	In A.D. 79, long-dormant Mount Vesuvius erupted, burying in volcanic ash the Roman city of Pompeii; an  estimated 20,000 people died. 
+ (MRR) Mean Reciprocal Rank ::0.2500
