@@ -1,5 +1,14 @@
 package edu.cmu.lti.f14.hw3.hw3_xzhan.casconsumers;
 
+/**
+ * This class is used to store each line of document.
+ *
+ * Implements Comparator so that instance of Docu could be compared
+ *
+ *  Name : Xiaoran Zhan (xzhan)
+ *
+ **/
+
 import java.util.Comparator;
 import java.util.Map;
 
@@ -9,15 +18,15 @@ public class Docu implements Comparator<Docu>{
   
   //
 
-  
+  /** cosine similarity of this document **/
   private double cos;
-  
+  /** rank of this document in whole document **/
   private int rank;
-  
+  /** relevance of this document **/
   private int rel;
-  
+  /** query id of this document **/
   private int id;
-  
+  /** text content of this document **/
   private String sentence;
   
   public Docu(){
@@ -69,7 +78,15 @@ public class Docu implements Comparator<Docu>{
     this.id = id;
   }
 
-
+  /**
+   * 
+   * Compare two Docu instance
+   * 
+   * If Docu1.cos < Docu2.cos
+   * 
+   * @return 1
+   * 
+   **/
   @Override
   public int compare(Docu arg0, Docu arg1) {
     // TODO Auto-generated method stub
@@ -81,6 +98,13 @@ public class Docu implements Comparator<Docu>{
     
   }
   
+  /**
+   * 
+   * Sort an array of Docu
+   * 
+   * Use insertion sort.
+   * 
+   **/
   public void insertionSort(Docu[] array){    
     for(int i = 0; i < array.length; i++){
       Docu temp = array[i];
