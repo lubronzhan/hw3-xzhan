@@ -26,12 +26,16 @@ import edu.cmu.lti.f14.hw3.hw3_xzhan.utils.Utils;
 
 public class RetrievalEvaluator extends CasConsumer_ImplBase {
 
-	/** whole doc of different id **/
+	/** whole doc of different id 
+	 *
+	 * map<id, list<Docu>>
+	 *
+	 **/
 	public Map<Integer, ArrayList<Docu>> docData;
 	
 	/** doc of each id doc.
 	 *  doc in arraylist 
-	 *  list<token,frequency>
+	 *  list<token, frequency>
 	 */
 	public ArrayList<Docu> eachD;
 	
@@ -71,6 +75,10 @@ public class RetrievalEvaluator extends CasConsumer_ImplBase {
 	/**
 	 * TODO :: 1. construct the global word dictionary 2. keep the word
 	 * frequency for each sentence
+	 * 
+	 * Store each line's info into Docu instance. Then store all the Docu into docData map.
+	 * 
+	 * 
 	 */
 	@Override
 	public void processCas(CAS aCas) throws ResourceProcessException {
@@ -83,8 +91,6 @@ public class RetrievalEvaluator extends CasConsumer_ImplBase {
 		}
 
 		FSIterator it = jcas.getAnnotationIndex(Document.type).iterator();
-		
-
 
 		if (it.hasNext()) {
 			Document doc = (Document) it.next();
@@ -139,8 +145,6 @@ public class RetrievalEvaluator extends CasConsumer_ImplBase {
         docu.setId(queryId);
         docu.setSentence(doc.getText());
         
-      
-        
         // add to arraylist 
         eachD.add(docu);
       }	
@@ -151,6 +155,9 @@ public class RetrievalEvaluator extends CasConsumer_ImplBase {
 	/**
 	 * TODO 1. Compute Cosine Similarity and rank the retrieved sentences 2.
 	 * Compute the MRR metric
+	 * 
+	 * Compute Cosine Similarity of each doc and store their rank in Map rankId.
+	 * 
 	 */
 	@Override
 	public void collectionProcessComplete(ProcessTrace arg0)
@@ -162,6 +169,7 @@ public class RetrievalEvaluator extends CasConsumer_ImplBase {
 		
 		Docu docu = new Docu();
 		
+		// put last line into docData
 		docData.put(lastId, eachD);
 		
     // output to file
@@ -184,7 +192,13 @@ public class RetrievalEvaluator extends CasConsumer_ImplBase {
 		    // compute the cosine of each doc
 		    
 		    docVector.setCos(computeCosineSimilarity(queryVector, docVector.getDocMap()));    
-		    
+/***
+ * OUTPUT DATA.
+ * 
+ * ***/
+//		    System.out.print("cosine="+ String.format("%.4f", docVector.getCos()));
+//        System.out.println( "\tqid=" + 
+//                docVector.getId() + "\trel=" + docVector.getRel() + "\t" + docVector.getSentence());
 		    // store doc into array
 		    array[k] = docVector;
 		    k++;
@@ -204,20 +218,21 @@ public class RetrievalEvaluator extends CasConsumer_ImplBase {
 		    else {
 		      rank = array.length - m;
 		      
-		      // system out line
+
 		      System.out.print("cosine="+ String.format("%.4f", array[m].getCos()));
-		      System.out.println("   rank= " + rank + "   qid= " + 
-		              array[m].getId() + "   rel=1   " + array[m].getSentence());
+		      System.out.println("\trank=" + rank + "\tqid=" + 
+		              array[m].getId() + "\trel=1\t" + array[m].getSentence());
 		      
 		      String result = "";
 		      result += "cosine=";
 		      result += String.format("%.4f", array[m].getCos());
-		      result += "   rank= ";
+		      result += "\trank=";
 		      result += rank;
-		      result += "   qid= ";
+		      result += "\tqid=";
 		      result += array[m].getId();
-		      result += "   rel=1   ";
+		      result += "\trel=1\t";
 		      result += array[m].getSentence();
+		      
 
 		      
 	        output.write(result);
@@ -230,19 +245,17 @@ public class RetrievalEvaluator extends CasConsumer_ImplBase {
 		  
 		  
 		  
-		  idRank.put(i, rank);
-		  
-		  
+		  idRank.put(i, rank);		  
 		}
 		
 		
 		// TODO :: compute the metric:: mean reciprocal rank
 		double metric_mrr = compute_mrr();
-		System.out.println(" (MRR) Mean Reciprocal Rank ::" + metric_mrr);
+		System.out.println(" (MRR) Mean Reciprocal Rank ::" + String.format("%.4f", metric_mrr));
 		
 		String metri = " (MRR) Mean Reciprocal Rank ::";
 		
-		metri += metric_mrr;
+		metri += String.format("%.4f", metric_mrr);
 		
 		output.write(metri);
 		
@@ -250,6 +263,9 @@ public class RetrievalEvaluator extends CasConsumer_ImplBase {
   }
 
 	/**
+	 * compute the cosine similarity.
+	 * <p>
+	 * 
 	 * 
 	 * @return cosine_similarity
 	 */
@@ -299,6 +315,9 @@ public class RetrievalEvaluator extends CasConsumer_ImplBase {
 	}
 
 	/**
+	 * compute mrr
+	 * <p>
+	 * First compute inverse of each rank, then add them, at last divide by number of query.
 	 * 
 	 * @return mrr
 	 */
@@ -308,8 +327,9 @@ public class RetrievalEvaluator extends CasConsumer_ImplBase {
 		
 		// TODO :: compute Mean Reciprocal Rank (MRR) of the text collection
 		
-		double sum = 0.000;
+		double sum = 0.0;
 		
+		// each 
 		for(int i = 1; i < idRank.size() + 1; i++){
 		  sum += 1.0/idRank.get(i);
     }

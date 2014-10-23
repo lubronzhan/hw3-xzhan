@@ -7,6 +7,11 @@ import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.jcas.JCas;
 
 import edu.cmu.lti.f14.hw3.hw3_xzhan.typesystems.Document;
+import edu.cmu.lti.f14.hw3.hw3_xzhan.utils.StanfordLemmatizer;
+
+
+
+
 
 
 public class DocumentReader 
@@ -33,9 +38,10 @@ extends JCasAnnotator_ImplBase  {
 		
 		// change the whole passage from upper case to lower case.
 		// also replace punctuation with ""
+		
 		String txt = docInfo.get(2);
-		// .toLowerCase().replace(".", "").replace(",", "").replace(":", "").replace("'s", "").replace("\"", "")
 		Document doc = new Document(jcas);
+		// StanfordLemmatizer.stemText(txt)
 		doc.setText(txt);
 		doc.setQueryID(qid);
 		//Setting relevance value
